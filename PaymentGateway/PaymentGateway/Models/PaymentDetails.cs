@@ -11,19 +11,11 @@ namespace PaymentGateway.Models
     {         
         [Required(AllowEmptyStrings = false, ErrorMessage = "{0} is required")]
         public string CardNumber { get; set; }
-
         public int ExpiryMonth { get; set; }
-
         public int ExpiryYear { get; set; }
-
         public decimal Amount { get; set; }
-
-        //[Required(AllowEmptyStrings = false, ErrorMessage = "{0} is required")]
         public string Currency { get; set; }
-
-        //[MaxLength(999, ErrorMessage = "{0} is too long, can not be longer than {1} characters")]
         public int CCV { get; set; }
-
     }
     public class PaymentDetailsExtended : PaymentDetails
     {

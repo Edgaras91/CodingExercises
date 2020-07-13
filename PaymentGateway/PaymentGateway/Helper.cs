@@ -15,7 +15,6 @@ namespace PaymentGateway
             Validator.TryValidateObject(obj, new ValidationContext(obj), result, true);
 
             return result;
-
         }
     }
 }

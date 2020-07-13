@@ -17,8 +17,7 @@ namespace PaymentGateway
         private static string systemPath =  Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
         private const string paymentsFileName = "Payments.txt";
 
-        private static string paymentsFullPath { get => Path.Combine(systemPath, paymentsFileName); }
-
+        private static string paymentsFullPath = Path.Combine(systemPath, paymentsFileName;
 
         public static async Task<List<PaymentDetailsExtended>> WritePayments(params PaymentDetails[] payments)
         {
