@@ -1,5 +1,5 @@
 # PaymentGateway
-API solution on ASP.NET Core 3.1
+API solution on ASP.NET Core 2.1
 
 Project showcases inheritance, asynchronous line by line data reads
 
