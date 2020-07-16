@@ -1,6 +1,6 @@
 # PaymentGateway
-API solution on ASP.NET Core 2.1
+API solution on ASP.NET Core 2.1 with Swagger
 
-Project showcases inheritance, asynchronous line by line data reads
+This is my first ever attempt to create an API from scratch.
 
-This is my first ever attempt to create an api from scratch.
+It uses a text file as a data storage so it will work without needing any connection strings, and it stores payment details in json format.
