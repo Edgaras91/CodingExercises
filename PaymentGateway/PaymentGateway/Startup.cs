@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -27,6 +28,11 @@ namespace PaymentGateway
         {
             loggerFactory.AddLog4Net();
             app.UseMvc();
+
+            var swaggerOptions = new SwaggerOptions();
+            System.Configuration.ConfigurationSection cat = new Configuration().GetSection(nameof(SwaggerOptions))
+            Microsoft.Extensions.Configuration.ConfigurationSection dog = new ConfigurationSection(app, nameof(SwaggerOptions))
+            ConfigurationBinder.Bind(nameof(SwaggerOptions), swaggerOptions);
         }
     }
 }

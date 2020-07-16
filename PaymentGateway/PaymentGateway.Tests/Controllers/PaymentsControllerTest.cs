@@ -64,12 +64,12 @@ namespace PaymentGateway.Tests.Controllers
         [Test]
         public void RetrievePayment()
         {
-            var response = controller.GetPaymentInfo(paymentResponse.Id).Result;
+            var response = controller.GetPaymentInfo(paymentResponse.Id);
 
-            if (response != null && response.Value is PaymentDetailsExtended)
-            {
-                Assert.IsTrue(response.Value.Id == paymentResponse.Id);
-            }
+            //if (response != null && response.Value is PaymentDetailsExtended)
+            //{
+            //    Assert.IsTrue(response.Value.Id == paymentResponse.Id);
+            //}
 
             Assert.Fail("Could not retrieve new payment's Id");
         }

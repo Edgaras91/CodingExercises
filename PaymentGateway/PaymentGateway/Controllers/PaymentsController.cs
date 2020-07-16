@@ -12,36 +12,36 @@ namespace PaymentGateway.Controllers
     [ApiController]
     public class PaymentsController : ControllerBase
     {
-        [HttpGet]
-        public ActionResult<IEnumerable<PaymentDetailsMasked>> GetCards()
-        {
-            return new List<PaymentDetailsMasked>() { new PaymentDetailsMasked() { CardNumber = "xxxx-xxxx-xxxx-" + new Random().Next(1000, 9999) } };
-        }
+        //[HttpGet]
+        //public ActionResult<IEnumerable<PaymentDetailsMasked>> GetCards()
+        //{
+        //    return new List<PaymentDetailsMasked>() { new PaymentDetailsMasked() { CardNumber = "xxxx-xxxx-xxxx-" + new Random().Next(1000, 9999) } };
+        //}
 
-        [HttpGet("{count}")]
-        public ActionResult<IEnumerable<PaymentDetailsMasked>> GetPaymentInfo(int count)
-        {
-            var cards = new List<PaymentDetailsMasked>();
+        //[HttpGet("{count}")]
+        //public ActionResult<IEnumerable<PaymentDetailsMasked>> GetPaymentInfo(int count)
+        //{
+        //    var cards = new List<PaymentDetailsMasked>();
 
-            for (int i = 0; i < count; i++)
-            {
-                //Generate new Masked Cards.
-                DateTime expiryDate = DateTime.Today.AddDays(new Random().Next(1, 1000));
+        //    for (int i = 0; i < count; i++)
+        //    {
+        //        //Generate new Masked Cards.
+        //        DateTime expiryDate = DateTime.Today.AddDays(new Random().Next(1, 1000));
 
-                var card = new PaymentDetailsMasked()
-                {
-                    CardNumber = "xxxx-xxxx-xxxx-" + new Random().Next(1000, 9999),
-                    ExpiryMonth = expiryDate.Month,
-                    ExpiryYear = int.Parse(expiryDate.ToString("yy"))
-                };
-                cards.Add(card);
-            }
+        //        var card = new PaymentDetailsMasked()
+        //        {
+        //            CardNumber = "xxxx-xxxx-xxxx-" + new Random().Next(1000, 9999),
+        //            ExpiryMonth = expiryDate.Month,
+        //            ExpiryYear = int.Parse(expiryDate.ToString("yy"))
+        //        };
+        //        cards.Add(card);
+        //    }
 
-            return cards;
-        }
+        //    return cards;
+        //}
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<PaymentDetailsExtended>> GetPaymentInfo(string id)
+        [HttpGet("api/payment/{id}")]
+        public IActionResult GetPaymentInfo(string id)
         {
             PaymentDetailsExtended payment = DataStorage.GetData(id).Result;
             if (payment == null)
