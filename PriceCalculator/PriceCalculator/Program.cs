@@ -9,15 +9,21 @@ namespace PriceCalculator
 {
     class Program
     {
-        private static decimal Tax = 20;
+        private static decimal Tax = 0;
         private static List<Product> Products;
+        internal static Discounts Discounts;
         private static void Main(string[] args)
         {
             //Lets begin!
             Initialise();
+
+            Tax = 20;
+            Discounts.ProductDiscounts = new Dictionary<int, decimal>() { [12345] = 7 };
             Console.WriteLine(Products[0].GetProductPriceMessage(Tax));
-            Console.WriteLine(Products[0].GetProductPriceMessage(Tax + 1));
-            Console.WriteLine(Products[0].GetProductPriceMessage(Tax, 15));
+
+            Tax = 21;
+            Discounts.ProductDiscounts = new Dictionary<int, decimal>() { [789] = 7 };
+            Console.WriteLine(Products[0].GetProductPriceMessage(Tax));
 
             Console.ReadLine();
         }
@@ -25,6 +31,7 @@ namespace PriceCalculator
         private static void Initialise()
         {
             Products = new List<Product>() { new Product { Name = "The little Prince", Price = 20.25m, UPC = 12345 } };
+            Discounts = new Discounts { GlobalDiscountPrecent = 15, };
         }
 
     }
