@@ -14,26 +14,44 @@ namespace PriceCalculator.Model
         //I would put tax, discounts in getters and setters.
         //Also on get, I would math.round.
 
-        public string GetProductPriceMessage(decimal taxPrecent)
+        public string GetProductPriceMessage(decimal taxPrecent, bool productDiscountBeforeTax = false)
         {
-            decimal taxPrice = Price + (Price / 100 * taxPrecent);
+            decimal taxedPrice = 0;
             decimal globalDiscount = 0;
             decimal productDiscount = 0;
-
-            if(Program.Discounts.GlobalDiscountPrecent != 0)
-            {
-                globalDiscount = Price / 100 * Program.Discounts.GlobalDiscountPrecent;
-            }
+            decimal finalPrice = 0;
 
             if (Program.Discounts.ProductDiscounts.ContainsKey(UPC))
             {
-                productDiscount = (Price / 100 * Program.Discounts.ProductDiscounts[UPC]);
+                if (productDiscountBeforeTax == true)
+                {
+                    decimal UPCDiscount = Price.DiscountPrice(Program.Discounts.ProductDiscounts[UPC]);
+                    decimal remainingPrice = (Price - UPCDiscount).Round();
+
+                    decimal taxprice = remainingPrice.DiscountPrice(taxPrecent);
+                    taxedPrice = Price + taxprice;
+                    decimal universalDiscount = remainingPrice.DiscountPrice(Program.Discounts.GlobalDiscountPrecent);
+
+                    finalPrice = (Price - UPCDiscount + taxprice - universalDiscount).Round();
+
+                }
+                else
+                {
+                    if (Program.Discounts.GlobalDiscountPrecent != 0)
+                    {
+                        globalDiscount = Price.DiscountPrice(Program.Discounts.GlobalDiscountPrecent);
+                    }
+                    taxedPrice = Price + (Price / 100 * taxPrecent);
+
+                    finalPrice = (taxedPrice - (globalDiscount + productDiscount)).Round();
+                }
             }
 
-            decimal finalPrice = taxPrice - (globalDiscount + productDiscount);
-            decimal discount = taxPrice - finalPrice;
-            return String.Format("Final price is ${0}, total discount is ${1} ", Math.Round(finalPrice, 2), Math.Round(discount, 2));
+            decimal discount = (taxedPrice - finalPrice).Round();
+            return String.Format("Final price is ${0}, total discount is ${1} ", finalPrice, discount);
         }
+
+
 
     }
 }

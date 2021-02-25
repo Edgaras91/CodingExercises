@@ -19,11 +19,7 @@ namespace PriceCalculator
 
             Tax = 20;
             Discounts.ProductDiscounts = new Dictionary<int, decimal>() { [12345] = 7 };
-            Console.WriteLine(Products[0].GetProductPriceMessage(Tax));
-
-            Tax = 21;
-            Discounts.ProductDiscounts = new Dictionary<int, decimal>() { [789] = 7 };
-            Console.WriteLine(Products[0].GetProductPriceMessage(Tax));
+            Console.WriteLine(Products[0].GetProductPriceMessage(Tax, true));
 
             Console.ReadLine();
         }
