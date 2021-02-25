@@ -15,9 +15,9 @@ namespace PriceCalculator
         {
             //Lets begin!
             Initialise();
-            Console.WriteLine(Products[0].GetProductTaxMessage(Tax));
-            Console.WriteLine(Products[0].GetProductTaxMessage(Tax + 1));
-            Console.WriteLine(Products[0].GetProductTaxMessage(Tax, 15));
+            Console.WriteLine(Products[0].GetProductPriceMessage(Tax));
+            Console.WriteLine(Products[0].GetProductPriceMessage(Tax + 1));
+            Console.WriteLine(Products[0].GetProductPriceMessage(Tax, 15));
 
             Console.ReadLine();
         }
