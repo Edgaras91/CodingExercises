@@ -17,16 +17,18 @@ namespace PriceCalculator.Model
         public decimal Discounts { get; }
         public decimal PackagingPrecent { get; set; }
         public decimal PackagingAmount { get => Price.Precentage(PackagingPrecent); }
-        public decimal Transport { get; set; }
+        public decimal TransportAmount { get; set; }
+        public decimal TransportPrecent { get; set; } 
         public decimal TOTAL { get; set; }
         public decimal UPCDiscount { get => Program.Discounts.ProductDiscounts.ContainsKey(UPC) == true && DiscountEnabled ? Program.Discounts.ProductDiscounts[UPC] : 0; }
         public bool DiscountEnabled { get; set; } = true;
         public decimal CapAmount { get; set; }
         public decimal CapPrecentage { get; set; }
+        public int DecimalPointsRounding { get; set; } = 4;//In Calculations Only
 
         //issue: when property changes (price), we need to run update other values as per constructor.
         //Alternativeley we call calculation methods in getters.
-        public Product(string name, int upc, decimal price, string currency, decimal tax, decimal packagingPrecent = 0, decimal transport = 0, decimal capPrecentage = 0, decimal capAmount = 0, bool discountEnabled = true, bool discountMultiplicative = false)
+        public Product(string name, int upc, decimal price, string currency, decimal tax, decimal packagingPrecent = 0, decimal transportAmount = 0, decimal transportPrecent = 0, decimal capPrecentage = 0, decimal capAmount = 0, bool discountEnabled = true, bool discountMultiplicative = false)
         {
             Name = name;
             UPC = upc;
@@ -34,14 +36,18 @@ namespace PriceCalculator.Model
             Currency = currency;
             TaxPrecent = tax;
             PackagingPrecent = packagingPrecent;
-            Transport = transport;
+            TransportAmount = transportAmount;
+            TransportPrecent = transportPrecent;
             CapPrecentage = capPrecentage;
             CapAmount = capAmount;
+
+            if (TransportPrecent != 0)
+                TransportAmount = Price.Precentage(TransportPrecent);
 
             if (discountEnabled)
                 Discounts = CalculateDiscounts(discountMultiplicative);
 
-            TOTAL = (Price + TaxAmount - Discounts + PackagingAmount + Transport).Round();
+            TOTAL = (Price + TaxAmount - Discounts + PackagingAmount + TransportAmount).Round(Program.DecimalPointsRounding);
 
         }
 
@@ -54,7 +60,7 @@ namespace PriceCalculator.Model
             if (CapPrecentage != 0)
                 tempCap = Price.Precentage(CapPrecentage);
 
-            if(CapPrecentage == 0 && CapAmount != 0)
+            if (CapPrecentage == 0 && CapAmount != 0)
             {
                 tempCap = CapAmount;
             }
@@ -64,14 +70,14 @@ namespace PriceCalculator.Model
             {
                 decimal discount1 = Price.Precentage(Program.Discounts.GlobalDiscountPrecent);
                 decimal discount2 = (Price - discount1).Precentage(UPCDiscount);
-                discount = (discount1 + discount2).Round();
+                discount = (discount1 + discount2).Round(Program.DecimalPointsRounding);
             }
             else
             {
-                discount = (Price.Precentage(Program.Discounts.GlobalDiscountPrecent)) + (Price.Precentage(UPCDiscount)).Round();
+                   discount = (Price.Precentage(Program.Discounts.GlobalDiscountPrecent)) + (Price.Precentage(UPCDiscount)).Round(Program.DecimalPointsRounding);
             }
 
-            if (discount > tempCap)
+            if (tempCap != 0 && discount > tempCap)
                 return tempCap;
             else
                 return discount;
@@ -85,23 +91,23 @@ namespace PriceCalculator.Model
 
             output += "========Product UPC: " + UPC + "========";
 
-            output += Environment.NewLine + "Cost = " + Price + " " + Currency;
+            output += Environment.NewLine + "Cost = " + Price.Round(Program.FinalPriceRounding) + " " + Currency;
 
-            output += Environment.NewLine + "Tax = " + TaxAmount + " " + Currency;
+            output += Environment.NewLine + "Tax = " + TaxAmount.Round(Program.FinalPriceRounding) + " " + Currency;
 
             if (Discounts != 0)
-                output += Environment.NewLine + "Discounts = " + Discounts + " " + Currency;
+                output += Environment.NewLine + "Discounts = " + Discounts.Round(Program.FinalPriceRounding) + " " + Currency;
 
             if (PackagingAmount != 0)
-                output += Environment.NewLine + "Packaging = " + PackagingAmount + " " + Currency;
+                output += Environment.NewLine + "Packaging = " + PackagingAmount.Round(Program.FinalPriceRounding) + " " + Currency;
 
-            if (Transport != 0)
-                output += Environment.NewLine + "Transport = " + Transport + " " + Currency;
+            if (TransportAmount != 0)
+                output += Environment.NewLine + "Transport = " + TransportAmount.Round(Program.FinalPriceRounding) + " " + Currency;
 
-            output += Environment.NewLine + "TOTAL = " + TOTAL + " " + Currency;
+            output += Environment.NewLine + "TOTAL = " + TOTAL.Round(Program.FinalPriceRounding) + " " + Currency;
 
             if (Discounts != 0)
-                output += Environment.NewLine + "Total Discount = " + Discounts + " " + Currency;
+                output += Environment.NewLine + "Total Discount = " + Discounts.Round(Program.FinalPriceRounding) + " " + Currency;
             else
                 output += Environment.NewLine + "No discounts";
 

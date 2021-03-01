@@ -12,15 +12,15 @@ namespace PriceCalculator
         /// Returns Discount price
         /// </summary>
         /// <param name="amount"></param>
-        /// <param name="discountPrecent"></param>
+        /// <param name="precentage"></param>
         /// <returns></returns>
-        public static decimal Precentage(this decimal amount, decimal discountPrecent)
+        public static decimal Precentage(this decimal amount, decimal precentage)
         {
-            return (amount / 100 * discountPrecent).Round();
+            return (amount / 100 * precentage).Round(Program.DecimalPointsRounding);
         }
-        public static decimal Round(this decimal amount)
+        public static decimal Round(this decimal amount, int decimalPoints)
         {
-            return Math.Round(amount, 2);
+            return Math.Round(amount, decimalPoints);
         }
     }
 }
