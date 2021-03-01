@@ -1,3 +1,6 @@
+# PriceCalculator
+Console application built according to requirements outlined here: https://github.com/markallengroup/price-calculator-kata
+
 # PaymentGateway
 API solution on ASP.NET Core 2.1 with Swagger
 
