@@ -20,10 +20,12 @@ namespace PriceCalculator.Model
         public decimal TOTAL { get; set; }
         public decimal UPCDiscount { get => Program.Discounts.ProductDiscounts.ContainsKey(UPC) == true && DiscountEnabled ? Program.Discounts.ProductDiscounts[UPC] : 0; }
         public bool DiscountEnabled { get; set; } = true;
+        public decimal CapAmount { get; set; }
+        public decimal CapPrecentage { get; set; }
 
         //issue: when property changes (price), we need to run update other values as per constructor.
         //Alternativeley we call calculation methods in getters.
-        public Product(string name, int upc, decimal price, decimal tax, decimal packagingPrecent = 0, decimal transport = 0, bool discountEnabled = true, bool discountMultiplicative = false)
+        public Product(string name, int upc, decimal price, decimal tax, decimal packagingPrecent = 0, decimal transport = 0, decimal capPrecentage = 0, decimal capAmount = 0, bool discountEnabled = true, bool discountMultiplicative = false)
         {
             Name = name;
             UPC = upc;
@@ -31,6 +33,8 @@ namespace PriceCalculator.Model
             TaxPrecent = tax;
             PackagingPrecent = packagingPrecent;
             Transport = transport;
+            CapPrecentage = capPrecentage;
+            CapAmount = capAmount;
 
             if (discountEnabled)
                 Discounts = CalculateDiscounts(discountMultiplicative);
@@ -41,16 +45,34 @@ namespace PriceCalculator.Model
 
         private decimal CalculateDiscounts(bool discountMultiplicative = false)
         {
+            decimal tempCap = 0;
+            decimal discount = 0;
+
+            //CalculateCapAmount
+            if (CapPrecentage != 0)
+                tempCap = Price.Precentage(CapPrecentage);
+
+            if(CapPrecentage == 0 && CapAmount != 0)
+            {
+                tempCap = CapAmount;
+            }
+
+            //CalculateDiscount
             if (discountMultiplicative == true)
             {
                 decimal discount1 = Price.Precentage(Program.Discounts.GlobalDiscountPrecent);
                 decimal discount2 = (Price - discount1).Precentage(UPCDiscount);
-                return (discount1 + discount2).Round();
+                discount = (discount1 + discount2).Round();
             }
             else
             {
-                return (Price.Precentage(Program.Discounts.GlobalDiscountPrecent)) + (Price.Precentage(UPCDiscount)).Round();
+                discount = (Price.Precentage(Program.Discounts.GlobalDiscountPrecent)) + (Price.Precentage(UPCDiscount)).Round();
             }
+
+            if (discount > tempCap)
+                return tempCap;
+            else
+                return discount;
 
         }
 
