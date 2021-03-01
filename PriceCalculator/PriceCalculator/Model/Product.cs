@@ -9,6 +9,7 @@ namespace PriceCalculator.Model
     public class Product
     {
         public string Name { get; set; }
+        public string Currency { get; set; }
         public int UPC { get; }
         public decimal Price { get; set; }
         public decimal TaxPrecent { get; set; }
@@ -25,11 +26,12 @@ namespace PriceCalculator.Model
 
         //issue: when property changes (price), we need to run update other values as per constructor.
         //Alternativeley we call calculation methods in getters.
-        public Product(string name, int upc, decimal price, decimal tax, decimal packagingPrecent = 0, decimal transport = 0, decimal capPrecentage = 0, decimal capAmount = 0, bool discountEnabled = true, bool discountMultiplicative = false)
+        public Product(string name, int upc, decimal price, string currency, decimal tax, decimal packagingPrecent = 0, decimal transport = 0, decimal capPrecentage = 0, decimal capAmount = 0, bool discountEnabled = true, bool discountMultiplicative = false)
         {
             Name = name;
             UPC = upc;
             Price = price;
+            Currency = currency;
             TaxPrecent = tax;
             PackagingPrecent = packagingPrecent;
             Transport = transport;
@@ -83,23 +85,23 @@ namespace PriceCalculator.Model
 
             output += "========Product UPC: " + UPC + "========";
 
-            output += Environment.NewLine + "Cost = $" + Price;
+            output += Environment.NewLine + "Cost = " + Price + " " + Currency;
 
-            output += Environment.NewLine + "Tax = " + TaxAmount;
+            output += Environment.NewLine + "Tax = " + TaxAmount + " " + Currency;
 
             if (Discounts != 0)
-                output += Environment.NewLine + "Discounts = " + Discounts;
+                output += Environment.NewLine + "Discounts = " + Discounts + " " + Currency;
 
             if (PackagingAmount != 0)
-                output += Environment.NewLine + "Packaging = " + PackagingAmount;
+                output += Environment.NewLine + "Packaging = " + PackagingAmount + " " + Currency;
 
             if (Transport != 0)
-                output += Environment.NewLine + "Transport = " + Transport;
+                output += Environment.NewLine + "Transport = " + Transport + " " + Currency;
 
-            output += Environment.NewLine + "TOTAL = " + TOTAL;
+            output += Environment.NewLine + "TOTAL = " + TOTAL + " " + Currency;
 
             if (Discounts != 0)
-                output += Environment.NewLine + "Total Discount = " + Discounts;
+                output += Environment.NewLine + "Total Discount = " + Discounts + " " + Currency;
             else
                 output += Environment.NewLine + "No discounts";
 
