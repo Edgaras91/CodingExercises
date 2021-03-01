@@ -14,7 +14,7 @@ namespace PriceCalculator
         /// <param name="amount"></param>
         /// <param name="discountPrecent"></param>
         /// <returns></returns>
-        public static decimal DiscountPrice(this decimal amount, decimal discountPrecent)
+        public static decimal Precentage(this decimal amount, decimal discountPrecent)
         {
             return (amount / 100 * discountPrecent).Round();
         }
