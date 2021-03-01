@@ -34,7 +34,7 @@ namespace PriceCalculator
             Products = new List<Product>()
             {
                 new Product("The little Prince", 12345, 20.25m, Tax, 1, 2.2m ),
-                new Product("The little Prince", 6789, 20.25m, Tax, discountEnabled: false )
+                new Product("The little Prince", 12345, 20.25m, Tax, 1, 2.2m,  discountMultiplicative:true )
             };
 
         }

@@ -23,7 +23,7 @@ namespace PriceCalculator.Model
 
         //issue: when property changes (price), we need to run update other values as per constructor.
         //Alternativeley we call calculation methods in getters.
-        public Product(string name, int upc, decimal price, decimal tax, decimal packagingPrecent = 0, decimal transport = 0, bool discountEnabled = true)
+        public Product(string name, int upc, decimal price, decimal tax, decimal packagingPrecent = 0, decimal transport = 0, bool discountEnabled = true, bool discountMultiplicative = false)
         {
             Name = name;
             UPC = upc;
@@ -33,15 +33,25 @@ namespace PriceCalculator.Model
             Transport = transport;
 
             if (discountEnabled)
-                Discounts = CalculateDiscounts();
+                Discounts = CalculateDiscounts(discountMultiplicative);
 
-            TOTAL = Price + TaxAmount - Discounts + PackagingAmount + Transport;
+            TOTAL = (Price + TaxAmount - Discounts + PackagingAmount + Transport).Round();
+
         }
 
-        private decimal CalculateDiscounts()
+        private decimal CalculateDiscounts(bool discountMultiplicative = false)
         {
-            //discounts = $20.25 * 15% + $20.25 * 7% = $3.04 + $1.42 = $4.46
-            return (Price.Precentage(Program.Discounts.GlobalDiscountPrecent)) + (Price.Precentage(UPCDiscount));
+            if (discountMultiplicative == true)
+            {
+                decimal discount1 = Price.Precentage(Program.Discounts.GlobalDiscountPrecent);
+                decimal discount2 = (Price - discount1).Precentage(UPCDiscount);
+                return (discount1 + discount2).Round();
+            }
+            else
+            {
+                return (Price.Precentage(Program.Discounts.GlobalDiscountPrecent)) + (Price.Precentage(UPCDiscount)).Round();
+            }
+
         }
 
 
